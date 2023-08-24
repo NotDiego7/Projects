@@ -1,4 +1,6 @@
 from tkinter import *
+from random import randint
+import csv, linecache
 # --------------------------------- Constants -------------------------------- #
 BACKGROUND_COLOR = "#B1DDC6"
 # ----------------------------------- Setup ---------------------------------- #
@@ -27,8 +29,13 @@ wrong_button_canvas = Canvas(width=100, height=100, background=BACKGROUND_COLOR,
 wrong_button_canvas.create_image(50, 50, image=wrong)
 wrong_button_canvas.grid(column=1, row=1)
 
+#TODO: Read CSV data
+with open(file="data/french_words.csv", mode= "r") as data:
+    data = csv.reader(data)
+    x = linecache.getline(filename= data, lineno= 1)
+    print(x)
 
-
+#NOTE: System Requirements: 11:54
 
 
 
