@@ -1,10 +1,23 @@
-import smtplib
+import smtplib, datetime, linecache
+from random import randint
 
-my_email = "Diego007lopez@gmail.com"
-recipient = "erikitasan99@gmail.com"
 
-host_connection = smtplib.SMTP(host="smtp.gmail.com", port=587)
-host_connection.starttls()
-host_connection.login(user= my_email, password= "grxdhlzlwiflpyru") 
-host_connection.sendmail(from_addr=my_email, to_addrs=recipient, msg="Subject: Erika es...\n\nculooooooooooooo")
-host_connection.close()
+with open(file="quotes.txt", mode="r") as file:
+    lines_total = sum(1 for line in file)
+
+quote = linecache.getline(filename="quotes.txt", lineno=randint(1, lines_total))
+
+# ---------------------------------------------------------------------------- #
+
+now = datetime.datetime.now()
+day_of_week = now.isoweekday()
+
+if day_of_week == 1:
+    my_email = "Diego007lopez@gmail.com"
+    recipient = "Lopez.d9@outlook.com"
+
+    with smtplib.SMTP(host="smtp.gmail.com", port=587) as host_connection:
+        host_connection.starttls()
+        host_connection.login(user= my_email, password= "grxdhlzlwiflpyru") 
+        host_connection.sendmail(from_addr=my_email, to_addrs=recipient, msg=f"Subject: Quote of the Day\n\n{quote}")
+
