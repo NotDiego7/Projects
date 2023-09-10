@@ -27,7 +27,7 @@ class QuizUI:
         
         # ----------------------------------- Score ---------------------------------- #
 
-        self.score_label = Label(text= f"Score: {self.quiz.score}", background= THEME_COLOR, foreground= "white", font= ("Times New Roman", 17, "bold"))
+        self.score_label = Label(text= f"Score: {self.quiz.score}", background= THEME_COLOR, foreground= "white", font= ("Bodoni MT", 18, "bold"))
         self.score_label.grid(column=1, row=0)
 
         # ---------------------------------- Buttons --------------------------------- #
