@@ -48,4 +48,4 @@ def send(message):
     # Send text message through SMS gateway of destination number
     server.sendmail(auth[0], to_number, message)
 
-send(daily_weather_data)
+# send(daily_weather_data) Need this line to function
