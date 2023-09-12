@@ -77,7 +77,7 @@ for article in top_three:
     with smtplib.SMTP(host= "smtp.gmail.com", port= 587) as connection:
         connection.starttls()
         connection.login("Diego007lopez@gmail.com", GMAIL_SMTP_PASS)
-        connection.sendmail(from_addr= "TheDog", to_addrs= "Lopez.d9@outlook.com", msg= f"Subject: {headline}\n\n{brief}\n\n{url}\n\nBitch-ass Stank Jocelyn, figured out how to automize sending you Trump news on the daily LMAO JK".encode('utf-8'))
+        connection.sendmail(from_addr= "TheDog", to_addrs= "xxxxxxxx@gmail.com", msg= f"Subject: {headline}\n\n{brief}\n\n{url}\n\nBitch-ass Stank Jocelyn, figured out how to automize sending you Trump news on the daily LMAO JK".encode('utf-8'))
 
 
 #Optional: Format the SMS message like this: 
@@ -90,4 +90,3 @@ or
 Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
 Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
 """
-
