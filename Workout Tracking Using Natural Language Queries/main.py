@@ -5,7 +5,7 @@ APP_ID = "f5a67424"
 API_KEY = "73467415749168a0a1e053e934c68118"
 SHEETY_AUTH = "Basic ZGllZ28wMDdsb3BlekBnbWFpbC5jb206RnVja2FsbHRoYXRsYW1lc2hpdA=="
 
-user_input = input("What exercise did you perform? ")
+user_input = input("Que ejercicio hiciste? ")
 
 # ------------------------- Get Current Time and Date ------------------------ #
 curr_datetime = datetime.now()
