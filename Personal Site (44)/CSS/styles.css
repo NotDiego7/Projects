@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    text-align: center;
+}
+
+h1 {
+    margin-block-start: 0;
+    margin: 0;
+}
+
+p {
+    margin: 1px;
+}
+
+.topContainer {
+    background-color: #E4F9F5;
+}
+
+.midContainer {
+    background-color: rgba(128, 128, 128, 0.575);
+}
+
+.bottomContainer {
+    background-color: lightblue;
+}
+
+.red {
+    background-color: red;
+    width: 200px;
+    height: 200px;
+}
+
+.blue {
+    background-color: blue;
+    width: 200px;
+    height: 200px;
+}
+
+#cloudOne {
+    position: relative;
+    right: 10%;
+}
+
+#cloudTwo {
+    margin-left: 45%;
+}

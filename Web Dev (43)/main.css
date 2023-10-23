@@ -1,0 +1,27 @@
+body {
+    background-color: #e1e1e1d6;
+}
+
+hr {
+    border-style: none;
+    border-top: 5px dotted;
+    width: 5%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background-color: #e1e1e100;
+    border-color: #9c9c9c;
+}
+
+h1 {
+    text-shadow: 1px 1px 9px rgb(35, 193, 199);
+    color: #3db097;
+}
+
+h3 {
+    color: #3db097;
+}
+
+hr:hover {
+    border-color: blueviolet;
+    zoom: 110%;
+}
