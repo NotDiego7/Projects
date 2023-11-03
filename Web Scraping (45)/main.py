@@ -36,17 +36,56 @@ The select() method is by far the best since you can use CSS-Selection just like
 # # print(markup_soup.find(name= "title").string)
 # print(markup_soup.find(name= "meta", property= "og:image").get("content"))
 
-# ------------------------- Second, more complex site ------------------------ #
-response = requests.get(url="https://news.ycombinator.com/")
+# ------------- Second, more complex site (Get two title and url) ------------ #
+# response = requests.get(url="https://news.ycombinator.com/")
+# response.raise_for_status()
+# response_content = response.content
+
+# markup_soup = BeautifulSoup(markup= response_content, features= "html.parser")
+# sought_content = markup_soup.find_all(class_= "titleline")
+
+# content_extract = []
+# for i in sought_content:
+#     anchor_tag = i.find(name= "a")
+#     content_extract.append([anchor_tag.string, anchor_tag.get("href")])
+
+# print(content_extract)
+
+# ------------ Get the first page's highest upvoted title and url ------------ #
+# response = requests.get(url= "https://news.ycombinator.com/")
+# response.raise_for_status()
+# markup = response.content
+
+# markup_soup = BeautifulSoup(markup= markup, features= "html.parser")
+# all_sought_content = markup_soup.find_all(class_="score")
+
+# upvote_points_list = [(int(i.string.split()[0])) for i in all_sought_content]
+
+# upvote_points_list.sort(reverse= True)
+# highest_upvoted = upvote_points_list[0]
+
+# highest_upvoted_id = markup_soup.find(name= "span", class_= "score", string= f"{highest_upvoted} points").get("id").split("_")[1]
+
+# highest_upvoted_element = markup_soup.find(name= "tr", id= highest_upvoted_id)
+# highest_upvoted_element = highest_upvoted_element.find(name= "span", class_= "titleline").find("a")
+
+# highest_upvoted_url = highest_upvoted_element.get("href")
+# highest_upvoted_title = highest_upvoted_element.string
+
+# print(f"{highest_upvoted_title}\n{highest_upvoted_url}\n{highest_upvoted}")
+
+# ----------------------------------- Final ---------------------------------- #
+response = requests.get(url= "https://web.archive.org/web/20200518073855/https://www.empireonline.com/movies/features/best-movies-2/")
 response.raise_for_status()
-response_content = response.content
+markup = response.content
 
-markup_soup = BeautifulSoup(markup= response_content, features= "html.parser")
-sought_content = markup_soup.find_all(class_= "titleline")
+soup_obj = BeautifulSoup(markup= markup, features= "html.parser")
 
-content_titlelines = []
-content_urls = []
-for i in sought_content:
-    content_titlelines.append(i.find(name= "a").string)
-    content_urls.append(i.find(name= "href"))
-    
+scrapped_list = soup_obj.find_all(name= "h3", class_= "title")
+scrapped_list.reverse()
+ordered_scrapped_string_list = [f"{i.string} \n" for i in  scrapped_list]
+
+with open(file= "100 Top Films.txt", mode= "w") as f:
+    f.writelines(ordered_scrapped_string_list)
+
+#TODO: We need a list which contains list elements consisting of the rank from 1-100 and title of film
