@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import ChromiumOptions
 from time import sleep
 
 # ------------------------------ Trying Selenium ----------------------------- #
@@ -57,17 +58,38 @@ from time import sleep
 # print(upcoming_events)
 
 # ------------------------ 4th Selenium (Interaction) ------------------------ #
-service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
-driver = webdriver.Chrome(service=service)
+# service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
+# driver = webdriver.Chrome(service=service)
 
-driver.get(url= "https://en.wikipedia.org/wiki/Main_Page")
-article_count = driver.find_element(by= By.CSS_SELECTOR, value= "#articlecount a")
+# driver.get(url= "https://en.wikipedia.org/wiki/Main_Page")
+# article_count = driver.find_element(by= By.CSS_SELECTOR, value= "#articlecount a")
 
-driver.fullscreen_window()
+# driver.fullscreen_window()
 
-driver.find_element(by= By.LINK_TEXT, value= "medical librarian").click()
-sleep(7.0)
-driver.find_element(by= By.LINK_TEXT, value= "MEDLINE").click()
-sleep(7.0)
-driver.find_element(by= By.LINK_TEXT, value= "Internet").click()
-sleep(7.0)
+# driver.find_element(by= By.LINK_TEXT, value= "medical librarian").click()
+# sleep(7.0)
+# driver.find_element(by= By.LINK_TEXT, value= "MEDLINE").click()
+# sleep(7.0)
+# driver.find_element(by= By.LINK_TEXT, value= "Internet").click()
+# sleep(7.0)
+# webdriver.Chrome(service= chrome_service, options= chrome_options)
+
+
+# # ----------------------------------- Final ---------------------------------- #
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
+
+service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
+
+driver_control = webdriver.Chrome(service= service, options= chrome_options)
+
+driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
+sleep(8.75)
+elem = driver_control.find_element(by= By.CSS_SELECTOR, value= '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > button')
+elem.click()
+
+elem = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
+print(elem)
+# sleep(5.0)
+
+# driver_control.download_file(file_name= "1.mp4",target_directory= "C:/Users/Lopez/Desktop")
