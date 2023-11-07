@@ -76,6 +76,23 @@ from time import sleep
 
 
 # # ----------------------------------- Final ---------------------------------- #
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
+
+# service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
+
+# driver_control = webdriver.Chrome(service= service, options= chrome_options)
+
+# driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
+# sleep(8.75)
+# elem = driver_control.find_element(by= By.CSS_SELECTOR, value= '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > button')
+# elem.click()
+
+# elem = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
+# print(elem)
+
+# driver_control.download_file(file_name= "1.mp4",target_directory= "C:/Users/Lopez/Desktop")
+
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
 
@@ -84,12 +101,12 @@ service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
 driver_control = webdriver.Chrome(service= service, options= chrome_options)
 
 driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
-sleep(8.75)
-elem = driver_control.find_element(by= By.CSS_SELECTOR, value= '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > button')
-elem.click()
+driver_control.
+sleep(10.75)
+elem_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.card button.video-play-btn')
+print(len(elem_list))
 
-elem = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
-print(elem)
-# sleep(5.0)
-
-# driver_control.download_file(file_name= "1.mp4",target_directory= "C:/Users/Lopez/Desktop")
+# for elem in elem_list:
+#     elem.click()
+#     elem_clip = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
+#     print(elem_clip)
