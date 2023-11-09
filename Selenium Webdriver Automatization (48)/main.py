@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import ChromiumOptions
 from time import sleep
+import time
 
 # ------------------------------ Trying Selenium ----------------------------- #
 # service = webdriver.ChromeService(executable_path="C:\Dev\chromedriver.exe")
@@ -74,8 +75,77 @@ from time import sleep
 # sleep(7.0)
 # webdriver.Chrome(service= chrome_service, options= chrome_options)
 
+# ------------------------------- 5th Wikipedia ------------------------------ #
+# service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
+# options = webdriver.ChromeOptions()
+# options = options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
 
-# # ----------------------------------- Final ---------------------------------- #
+# control_driver = webdriver.Chrome(service= service, options= options)
+# control_driver.get(url= "https://en.wikipedia.org/wiki/Main_Page")
+
+# search_form = control_driver.find_element(by= By.CSS_SELECTOR, value= 'input.cdx-text-input__input')
+# search_form.send_keys("Python")
+# search_form.submit()
+# sleep(7.0)
+
+# ------------------- 6th Submit Form with Personal Details ------------------ #
+# FULL_NAME = "Mark Zuck"
+# EMAIL = "MarkZuck@FB.com"
+
+# service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
+# options = webdriver.ChromeOptions()
+# options = options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
+
+# control_driver = webdriver.Chrome(service= service, options= options)
+
+# control_driver.get(url= "http://secure-retreat-92358.herokuapp.com/")
+# f_name = control_driver.find_element(By.NAME, "fName")
+# f_name.send_keys(FULL_NAME.split()[0])
+
+# l_name = control_driver.find_element(By.NAME, "lName")
+# l_name.send_keys(FULL_NAME.split()[1])
+
+# email = control_driver.find_element(By.NAME, "email")
+# email.send_keys(EMAIL)
+# email.submit()
+# sleep(7.00
+
+# ----------------------- Final | Cookie Clicker Final ----------------------- #
+service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
+driver_control = webdriver.Chrome(service= service)
+
+driver_control.get('https://orteil.dashnet.org/cookieclicker/')
+sleep(8.00)
+select_language = driver_control.find_element(by= By.ID, value= 'langSelect-EN')
+select_language.click()
+
+sleep(8.70)
+cookie_button = driver_control.find_element(by= By.CSS_SELECTOR, value= 'div#cookieAnchor button')
+
+prices_list = []
+while True:
+    prices_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.product.unlocked.enabled span.price')
+    current = time.localtime().tm_sec
+    
+    if len(prices_list) == 0:
+        five_secs_after_current = current + 5
+        while current <= five_secs_after_current:
+            cookie_button.click()
+            five_secs_after_current -= 0.1
+            
+
+    
+    if current % 5 == 0: # Gets prices into a list every 5 seconds
+
+        prices_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.product.unlocked.enabled span.price')
+        most_expensive_item_id_num = prices_list[-1].get_attribute("id")[-1]
+        driver_control.find_element(by= By.ID, value= f"product{most_expensive_item_id_num}").click() # Buys the most expensive element available
+        
+
+    cookie_button.click()
+
+
+# ---------------------------- Get Content from MM --------------------------- #
 # chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
 
@@ -84,27 +154,10 @@ from time import sleep
 # driver_control = webdriver.Chrome(service= service, options= chrome_options)
 
 # driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
-# sleep(8.75)
-# elem = driver_control.find_element(by= By.CSS_SELECTOR, value= '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > button')
-# elem.click()
-
-# elem = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
-# print(elem)
-
-# driver_control.download_file(file_name= "1.mp4",target_directory= "C:/Users/Lopez/Desktop")
-
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
-
-service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
-
-driver_control = webdriver.Chrome(service= service, options= chrome_options)
-
-driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
-driver_control.
-sleep(10.75)
-elem_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.card button.video-play-btn')
-print(len(elem_list))
+# driver_control.
+# sleep(10.75)
+# elem_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.card button.video-play-btn')
+# print(len(elem_list))
 
 # for elem in elem_list:
 #     elem.click()
