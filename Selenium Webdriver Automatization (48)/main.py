@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import ChromiumOptions
 from time import sleep
 import time
 
@@ -111,55 +110,51 @@ import time
 # sleep(7.00
 
 # ----------------------- Final | Cookie Clicker Final ----------------------- #
-service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
-driver_control = webdriver.Chrome(service= service)
+# service = webdriver.ChromeService(executable_path= "C:/Dev/chromedriver.exe")
+# driver_control = webdriver.Chrome(service= service)
 
-driver_control.get('https://orteil.dashnet.org/cookieclicker/')
-sleep(8.00)
-select_language = driver_control.find_element(by= By.ID, value= 'langSelect-EN')
-select_language.click()
+# driver_control.get('https://orteil.dashnet.org/cookieclicker/')
+# sleep(8.00)
+# select_language = driver_control.find_element(by= By.ID, value= 'langSelect-EN')
+# select_language.click()
 
-sleep(8.70)
-cookie_button = driver_control.find_element(by= By.CSS_SELECTOR, value= 'div#cookieAnchor button')
+# sleep(8.70)
+# cookie_button = driver_control.find_element(by= By.CSS_SELECTOR, value= 'div#cookieAnchor button')
 
-prices_list = []
-while True:
-    prices_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.product.unlocked.enabled span.price')
-    current = time.localtime().tm_sec
+# prices_list = []
+# while True:
+#     current = time.localtime().tm_sec          
     
-    if len(prices_list) == 0:
-        five_secs_after_current = current + 5
-        while current <= five_secs_after_current:
-            cookie_button.click()
-            five_secs_after_current -= 0.1
-            
-
-    
-    if current % 5 == 0: # Gets prices into a list every 5 seconds
-
-        prices_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.product.unlocked.enabled span.price')
-        most_expensive_item_id_num = prices_list[-1].get_attribute("id")[-1]
-        driver_control.find_element(by= By.ID, value= f"product{most_expensive_item_id_num}").click() # Buys the most expensive element available
+#     if current % 5 == 0: # Gets prices into a list every 5 seconds
+#         prices_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.product.unlocked.enabled span.price')
+#         if len(prices_list) == 0:
+#             break # Breaks the loop, effectively skipping the following else statement
+#         else:
+#             most_expensive_item_id_num = prices_list[-1].get_attribute("id")[-1]
+#             print(most_expensive_item_id_num)
+#             driver_control.find_element(by= By.ID, value= f"product{most_expensive_item_id_num}").click() # Buys the most expensive element available
         
 
-    cookie_button.click()
+#     cookie_button.click()
+
+# driver_control.quit()
 
 
 # ---------------------------- Get Content from MM --------------------------- #
-# chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument(r"--user-data-dir=C:\Users\Lopez\AppData\Local\Google\Chrome\User Data")
 
-# service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
+service = webdriver.ChromeService(executable_path="C:/Dev/chromedriver.exe")
 
-# driver_control = webdriver.Chrome(service= service, options= chrome_options)
+driver_control = webdriver.Chrome(service= service, options= chrome_options)
 
-# driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
+driver_control.get(url= "https://app.moviemethod.com/moderator/decks/details/622025857afd91390e00ac3e/cards")
 # driver_control.
-# sleep(10.75)
-# elem_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.card button.video-play-btn')
-# print(len(elem_list))
+sleep(10.75)
+elem_list = driver_control.find_elements(by= By.CSS_SELECTOR, value= 'div.card button.video-play-btn')
+print(len(elem_list))
 
-# for elem in elem_list:
-#     elem.click()
-#     elem_clip = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
-#     print(elem_clip)
+for elem in elem_list:
+    elem.click()
+    elem_clip = driver_control.find_element(By.CSS_SELECTOR, '#app > div > div > div.dashboard-content > div.container > div > div > div > div > div > div > div.vue-recycle-scroller__item-wrapper > div:nth-child(1) > div > div:nth-child(1) > div.card-video > div > video').get_attribute("src")
+    print(elem_clip)

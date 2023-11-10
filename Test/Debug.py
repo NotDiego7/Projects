@@ -1,2 +1,6 @@
 import time
-print(type(time.localtime().tm_sec))
+
+print(time.localtime().tm_sec)
+
+secs = time.time()
+print(time.localtime(secs))
