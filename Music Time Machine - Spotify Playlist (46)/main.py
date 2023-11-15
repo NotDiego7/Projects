@@ -5,8 +5,6 @@ from spotipy.oauth2 import SpotifyOAuth
 # from google import generativeai as palm
 # import google
 
-# TODO: Use Spotify to create a playlist based on these songs
-
 CLIENT_ID = '320c531fc51b4c8f8b8278ff1c9a74bb'
 CLIENT_SECRET = '9b5094c57cf64a629d3b11c5a1b72c7c'
 
@@ -28,8 +26,8 @@ print(song_data[0])
 
 # ---------------------------------- Spotify --------------------------------- #
 REDIRECT_URI = 'http://example.com'
-SCOPE = 'playlist-modify-public'
-playlist_id = '4hRoihtBsU3Rzhc8bXuut7'
+SCOPE = 'playlist-modify-private'
+playlist_id = '7remQrNFYbd4VilXoEykuh'
 
 sp_oauth = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=SCOPE)
 
@@ -44,18 +42,25 @@ access_token = token_info['access_token']
 
 spotify = spotipy.Spotify(auth=access_token)
 
+# ---------------------------------------------------------------------------- #
+def search_and_get_song_uri(title, artist):
+    song_uri = spotify.search(q= f"{title} {artist}", type= "track", limit= 1)
+    if song_uri['tracks']['items']:
+        return song_uri['tracks']['items'][0]['uri']
+    else:
+        return None
+# ---------------------------------------------------------------------------- #
+def add_song_to_playlist(song_uri):
+    spotify.playlist_add_items(playlist_id= playlist_id, items= [song_uri])
+# ---------------------------------------------------------------------------- #
 
 for song in song_data:
     title = tuple(song.items())[0][0]
     artist = tuple(song.items())[0][1]
-    search_and_get_song_uri(spotify, title, artist)
-    break
+    song_uri = search_and_get_song_uri(title, artist)
+    if song_uri:
+        add_song_to_playlist(song_uri)
 
-
-
-def search_and_get_song_uri(spotify, title, artist):
-    results = spotify.search(q= f"{title} {artist}", type= "track")
-    print(results)
 
 
 # --------------------------- Google Generative AI --------------------------- #
