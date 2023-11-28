@@ -1,54 +1,48 @@
-import time
+import time           
 
-# def log_execution_time(func):
-#     def wrapper(*args, **kwargs):
-#         start_time = time.time()
-#         result = func(*args, **kwargs)
-#         end_time = time.time()
-#         print(f"Execution time of {func.__name__}: {end_time - start_time} seconds")
-#         return result
+# def decorator(affected_function):
+#     def wrapper():
+#         print('Here we go...')
+#         time.sleep(1.0)
+#         print(3)
+#         time.sleep(1.0)
+#         print(2)
+#         time.sleep(1.0)
+#         print(1)
+#         time.sleep(2.5)
+#         affected_function()
+#         return
 #     return wrapper
 
-# @log_execution_time
-# def my_function(n):
-#     for i in range(n):
-#         print(i)
+# # ---------------------------------------------------------------------------- #
+# @decorator
+# def my_function():
+#     num = 1
+#     for i in range(11):
+#         print(f'\n\n\n{num}. Dan the Man...\n\n\n')
+#         num += 1
 
-# my_function(100)
+# decorated_function = my_function()
+# decorated_function()
 
-# class Lavaral(object):
-#     def __init__(self, affected_function):
-#         self.affected_function = affected_function
-
-#     def decorator(self):
-#         time.sleep(10.0)
-#         def wrapper():
-#             return self.affected_function
-                
-
-def decorator(affected_function):
+def add_user_interactive_question(function_to_decorate):
     def wrapper():
-        print('Here we go...')
-        time.sleep(1.0)
-        print(3)
-        time.sleep(1.0)
-        print(2)
-        time.sleep(1.0)
-        print(1)
-        time.sleep(2.5)
-        affected_function()
-        return
+        time.sleep(0.2)
+        user_response = input(f'{player_id.title()}, are you ready? ') # TODO Need to pass player_id into this
+        if user_response.title() == 'Yes':
+            return function_to_decorate()
+        else:
+            return
     return wrapper
 
-# ---------------------------------------------------------------------------- #
-@decorator
-def my_function():
-    num = 1
-    for i in range(11):
-        print(f'\n\n\n{num}. Dan the Man...\n\n\n')
-        num += 1
 
-decorated_function = my_function()
-decorated_function()
-# lavaral_instance = Lavaral(my_function)
-# lavaral_instance()
+@add_user_interactive_question
+def first():
+    words_to_output = ['Ready...', 'Set!', 'Gooooo!']
+    for i in range(0, 3):
+        time.sleep(1.2)
+        print(words_to_output[i])
+
+
+player_id = input('Enter your name: ')
+first()
