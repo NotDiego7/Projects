@@ -14,7 +14,6 @@
 # ---------------------------- Decorator Exercise ---------------------------- #
 import time
 current_time = time.time()
-# print(current_time)
 
 def speed_calc_decorator(function_to_decorate):
     def wrapper():
