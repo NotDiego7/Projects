@@ -3,7 +3,7 @@ import requests
 
 main = Flask(__name__)
 
-with open(file= 'Stellar - HTML5\index.html', encoding='utf-8', mode= 'r') as file:
+with open(file= 'index.html', encoding='utf-8', mode= 'r') as file:
     markup_index = file.read()
 
 @main.route('/')
