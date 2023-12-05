@@ -15,14 +15,18 @@ This is for playlists
 # subprocess.run(["powershell.exe", "start", "\"" + audio_file + "\""])
 
 # ---------------------------------------------------------------------------- #
-import pytube, subprocess, time
+def download_and_play(youtube_link):
+    import pytube, subprocess
 
-vid_link = 'https://www.youtube.com/watch?v=DXztav3aQ_c'
-song = pytube.YouTube(url= vid_link)
-print(song.streams.get_audio_only().url)
-# audio_file_path = song.streams.get_audio_only().download()
-# # pytube.YouTube().streams.get_audio_only(subtype= "mp3") # This is just to get glimpse of what methods and properties the YT instance has
+    song = pytube.YouTube(url= youtube_link)
+
+    # print(song.streams.get_audio_only().url)
+
+    audio_file_path = song.streams.get_audio_only().download()
+    # # pytube.YouTube().streams.get_audio_only(subtype= "mp3") # This is just to get glimpse of what methods and properties the YT instance has
 
 
 
-# subprocess.run(["powershell.exe", "start", "\"" + audio_file_path + "\""])
+    subprocess.run(["powershell.exe", "start", "\"" + audio_file_path + "\""])
+
+download_and_play('https://www.youtube.com/watch?v=bJy8lidrQxY')
