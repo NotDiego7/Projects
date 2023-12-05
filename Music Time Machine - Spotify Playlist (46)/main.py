@@ -64,7 +64,7 @@ for song in song_data:
 
 
 # --------------------------- Google Generative AI --------------------------- #
-# PALM_KEY = 'AIzaSyCzeG9tUGbeeODMYCvrY9btm8UQupprjb8'
+# PALM_KEY = 
 
 # user_input = input('Input: ')
 
