@@ -5,7 +5,7 @@ sendMessageButton.addEventListener('click', function() {
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', 'http://127.0.0.1:5000/api/generate_text');
+    xhr.open('POST', 'http://www.NotDiego7.pythonanywhere.com/home/NotDiego7/mysite/'); // NEED TO CHANGE HERE
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.send(JSON.stringify({ text }));
@@ -13,7 +13,7 @@ sendMessageButton.addEventListener('click', function() {
     xhr.onload = function() {
         if (xhr.status === 200) {
             // Get request's response (AI generated text).
-            const generatedText = JSON.parse(xhr.responseText).text; 
+            const generatedText = JSON.parse(xhr.responseText).text;
 
             // Set the AI-generated text in the blockquote element.
             document.querySelector('blockquote').innerText = generatedText;
