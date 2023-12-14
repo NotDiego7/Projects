@@ -5,7 +5,7 @@ sendMessageButton.addEventListener('click', function() {
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', 'http://www.NotDiego7.pythonanywhere.com/home/NotDiego7/mysite/'); // NEED TO CHANGE HERE
+    xhr.open('POST', 'http://notdiego7.pythonanywhere.com/'); // NEED TO CHANGE HERE
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.send(JSON.stringify({ text }));
