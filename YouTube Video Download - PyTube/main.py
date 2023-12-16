@@ -23,4 +23,4 @@ def download_and_play(youtube_link):
 
     subprocess.run(["powershell.exe", "start", "\"" + audio_file_path + "\""])
 
-download_and_play('https://www.youtube.com/watch?v=s2WSQMKvn9U') # NOTE: Having to input the link manually is obviously provisional
+download_and_play('https://music.youtube.com/watch?v=hTa0R9vHwdk&si=iBa4rzWcc2V1gmUr') # NOTE: Having to input the link manually is obviously provisional
