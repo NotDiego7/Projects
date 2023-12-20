@@ -194,6 +194,12 @@ input, select, textarea {
 		padding: 0.5em 0 0.5em 2em;
 	}
 
+	.ai-output {
+		text-align: center;
+		font-style: oblique;
+		font: small-caption;
+	}
+
 	code {
 		background: rgba(255, 255, 255, 0.075);
 		border-radius: 4px;
