@@ -1,115 +1,99 @@
 const uploadButton = document.getElementById('upload-image-button');
 
 uploadButton.addEventListener('click', () => {
-  const fileReader = new FileReader();
+ const fileReader = new FileReader();
 
-  // Function to handle the image data for display
-  fileReader.onload = (event) => {
-    const imageURL = event.target.result;
-    const imageElement = document.getElementById('image-preview');
-    imageElement.src = imageURL;
-  };
+ // Function to handle the image data for display
+ fileReader.onload = (event) => {
+   const imageURL = event.target.result;
+   const imageElement = document.getElementById('image-preview');
+   imageElement.src = imageURL;
+ };
 
-  // Trigger the file selection dialog
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.click();
+ // Trigger the file selection dialog
+ const input = document.createElement('input');
+ input.type = 'file';
+ input.accept = 'image/*';
+ input.click();
 
-  input.addEventListener('change', () => {
-    fileReader.readAsDataURL(input.files[0]); // Read as data URL for display
+ input.addEventListener('change', () => {
+   fileReader.readAsDataURL(input.files[0]); // Read as data URL for display
 
-    // Upload image directly to Dropbox when the send button is clicked
-    const sendMessageButton = document.getElementById('send-message-button');
-    sendMessageButton.addEventListener('click', async () => {
-      const imageFile = input.files[0];
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(imageFile);
+   // Upload image directly to Dropbox when the send button is clicked
+   const sendMessageButton = document.getElementById('send-message-button');
+   sendMessageButton.addEventListener('click', async () => {
+     const imageFile = input.files[0];
+     const reader = new FileReader();
+     reader.readAsArrayBuffer(imageFile);
 
-      reader.onloadend = async () => {
-        try {
-          // Upload image to Dropbox
-          const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer sl.BsgkCgkvqmoDyafZQlA-sKFrqZJElcrjVTCNSgFUzkTeoTjiGbKnwozlLXEod3JzpHOd9T23rHpnyL2L2q8Oia3eR9F43N0QS_hKaN0XEykeFxFfWlQR2kGVOUYJ46suZtM5FdxVguheC90GUB5N',  // Replace with your access token
-              'Content-Type': 'application/octet-stream',
-              'Dropbox-API-Arg': JSON.stringify({
-                path: '/image.jpg',
-                mode: 'overwrite'
-              })
-            },
-            body: reader.result
-          });
+     let accessToken; // Store the access token globally
 
+     reader.onloadend = async () => {
+       try {
+         // Check if the access token is already available
+         if (!accessToken) {
+           // Fetch the access token if it's the first time running
+           const dbxtknResponse = await fetch('https://notdiego7.pythonanywhere.com/dbxtkn', {
+             method: 'GET',
+             headers: {
+               'Content-Type': 'application/json'
+             }
+           });
+           accessToken = await dbxtknResponse.json().access_token;
+         }
 
-          // Check if shared link already exists
-          const existingSharedLinkResponse = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer sl.BsgkCgkvqmoDyafZQlA-sKFrqZJElcrjVTCNSgFUzkTeoTjiGbKnwozlLXEod3JzpHOd9T23rHpnyL2L2q8Oia3eR9F43N0QS_hKaN0XEykeFxFfWlQR2kGVOUYJ46suZtM5FdxVguheC90GUB5N',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              path: '/image.jpg',
-              direct_only: true  // Only include direct shared links
-            })
-          });
+         // Upload image to Dropbox
+         const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
+           method: 'POST',
+           headers: {
+             'Authorization': `Bearer ${accessToken}`,
+             'Content-Type': 'application/octet-stream',
+             'Dropbox-API-Arg': JSON.stringify({
+               path: '/image.jpg',
+               mode: 'overwrite'
+             })
+           },
+           body: reader.result
+         });
 
-          const existingSharedLinkData = await existingSharedLinkResponse.json();
+         // Get temporary link using /get_temporary_link
+         const getTemporaryLinkResponse = await fetch('https://api.dropboxapi.com/2/files/get_temporary_link', {
+           method: 'POST',
+           headers: {
+             'Authorization': `Bearer ${accessToken}`,
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             path: '/image.jpg'
+           })
+         });
 
-          let dropboxPreviewPage;
-          if (existingSharedLinkData.links.length > 0) {
-            // Use existing shared link
-            dropboxPreviewPage = existingSharedLinkData.links[0].url;
-          } else {
-            // Create shared link if it doesn't exist
-            const createSharedLinkResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
-              method: 'POST',
-              headers: {
-                'Authorization': 'Bearer sl.BsgkCgkvqmoDyafZQlA-sKFrqZJElcrjVTCNSgFUzkTeoTjiGbKnwozlLXEod3JzpHOd9T23rHpnyL2L2q8Oia3eR9F43N0QS_hKaN0XEykeFxFfWlQR2kGVOUYJ46suZtM5FdxVguheC90GUB5N',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                path: '/image.jpg',
-                settings: {
-                  access: 'viewer',
-                  allow_download: true,
-                  audience: 'public',
-                  requested_visibility: 'public'
-                }
-              })
-            });
+         const temporaryLink = await getTemporaryLinkResponse.json().link; // Get temporary link
 
-            const dropboxSharedLinkResponse = await createSharedLinkResponse.json();
-            dropboxPreviewPage = dropboxSharedLinkResponse.url;
-          }
+         const text = document.getElementById('message').value;
 
+         // Send request to serverSide proxy (Python) | CORS(request) -> Gemini API -> Response
+         const pyProxyResponse = await fetch('https://notdiego7.pythonanywhere.com', {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             prompt: text,
+             temporaryLink: temporaryLink
+           })
+         });
+         const generatedText = await pyProxyResponse.json().text;
 
-          const text = document.getElementById('message').value;
-
-          // Call Python server-side proxy with CORS in-place to make requests to Gemini API
-          const pyProxyResponse = await fetch('https://notdiego7.pythonanywhere.com/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              prompt: text,
-              dropboxPreviewPage: dropboxPreviewPage
-            })
-          });
-          const ProxyResponse = await pyProxyResponse.json();
-          const generatedText = ProxyResponse.text;
-
-          document.querySelector('p#ai-body-text').innerText = generatedText;
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-    });
-  });
+         document.querySelector('p#ai-body-text').innerText = generatedText;
+       } catch (error) {
+         console.error('Error:', error);
+       }
+     };
+   });
+ });
 });
+
 
 
 

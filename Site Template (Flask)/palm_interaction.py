@@ -1,17 +1,18 @@
 from flask import Flask, request, jsonify
 from google import generativeai
 from flask_cors import CORS
-from bs4 import BeautifulSoup  # Import BeautifulSoup for parsing HTML
+from bs4 import BeautifulSoup
 from io import BytesIO
 from PIL import Image
-import requests
+from dropbox import DropboxOAuth2FlowNoRedirect
+import requests, json
 
 # -------------------------------- WebApp API -------------------------------- #
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/', methods=['POST'])
-def generate_text_api():
+def generate_text_endpoint():
     try:
         request_data = request.get_json()
 
@@ -26,7 +27,40 @@ def generate_text_api():
         return jsonify({'text': generated_text}), 200, headers
 
     except Exception as e:
-        raise Exception(f"Error processing request: {e}")
+        raise Exception(f"{e}")
+
+@app.route('/dbxtkn', methods=['GET'])
+def drop_box_oauth2_token_endpoint():
+    APP_KEY = "bx9yg1jyu7zkj18"
+    APP_SECRET = "qmqy549b9wab3dk"
+
+    try:
+        # TODO: Here, we need OAuth2
+        auth_endpoint = "https://api.dropboxapi.com/2/auth/token/from_oauth1"
+
+        headers = {
+            "Authorization": "Basic <APP_KEY>:<APP_SECRET>",
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "oauth1_token": "bx9yg1jyu7zkj18",
+            "oauth1_token_secret": "qmqy549b9wab3dk"
+        }
+        with requests
+        r = requests.post(auth_endpoint, headers=headers, data=json.dumps(data))
+
+
+        # Store the access token securely (database or encrypted file)
+        # TODO: (Implement storage method)
+
+        headers = {'Content-Type': 'application/json'}
+        return jsonify({'access_token': access_token}), 200, headers
+
+    except Exception as e:
+        raise Exception(f'Error: {e}')
+        
+
 
 
 if __name__ == '__main__':
@@ -34,9 +68,9 @@ if __name__ == '__main__':
 
 # ---------------------- Gemini Pro Vision Main Function --------------------- #
 def generate_ai_text(prompt, image_url):
-    PALM_KEY = "AIzaSyDh-DlmCVoUAHDT3GA5N20pRF668pWZnxk"
+    API_KEY = "AIzaSyDh-DlmCVoUAHDT3GA5N20pRF668pWZnxk"
     
-    generativeai.configure(api_key= PALM_KEY)
+    generativeai.configure(api_key= API_KEY)
     model = generativeai.GenerativeModel('gemini-pro-vision')
     response = model.generate_content([prompt, image_url])
 
