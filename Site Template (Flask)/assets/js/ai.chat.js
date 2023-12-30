@@ -1,98 +1,93 @@
 const uploadButton = document.getElementById('upload-image-button');
 
 uploadButton.addEventListener('click', () => {
- const fileReader = new FileReader();
+  const fileReader = new FileReader();
 
- // Function to handle the image data for display
- fileReader.onload = (event) => {
-   const imageURL = event.target.result;
-   const imageElement = document.getElementById('image-preview');
-   imageElement.src = imageURL;
- };
+  // Function to handle the image data for display
+  fileReader.onload = (event) => {
+    const imageURL = event.target.result;
+    const imageElement = document.getElementById('image-preview');
+    imageElement.src = imageURL;
+  };
 
- // Trigger the file selection dialog
- const input = document.createElement('input');
- input.type = 'file';
- input.accept = 'image/*';
- input.click();
+  // Trigger the file selection dialog
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.click();
 
- input.addEventListener('change', () => {
-   fileReader.readAsDataURL(input.files[0]); // Read as data URL for display
+  input.addEventListener('change', () => {
+    fileReader.readAsDataURL(input.files[0]); // Read as data URL for display
 
-   // Upload image directly to Dropbox when the send button is clicked
-   const sendMessageButton = document.getElementById('send-message-button');
-   sendMessageButton.addEventListener('click', async () => {
-     const imageFile = input.files[0];
-     const reader = new FileReader();
-     reader.readAsArrayBuffer(imageFile);
+    // Disable further file selection
+    input.disabled = true;
 
-     let accessToken; // Store the access token globally
+    // Upload image directly to Dropbox when the send button is clicked
+    const sendMessageButton = document.getElementById('send-message-button');
+    sendMessageButton.addEventListener('click', async () => {
+      const imageFile = input.files[0];
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(imageFile);
 
-     reader.onloadend = async () => {
-       try {
-         // Check if the access token is already available
-         if (!accessToken) {
-           // Fetch the access token if it's the first time running
-           const dbxtknResponse = await fetch('https://notdiego7.pythonanywhere.com/dbxtkn', {
-             method: 'GET',
-             headers: {
-               'Content-Type': 'application/json'
-             }
-           });
-           accessToken = await dbxtknResponse.json().access_token;
-         }
 
-         // Upload image to Dropbox
-         const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
-           method: 'POST',
-           headers: {
-             'Authorization': `Bearer ${accessToken}`,
-             'Content-Type': 'application/octet-stream',
-             'Dropbox-API-Arg': JSON.stringify({
-               path: '/image.jpg',
-               mode: 'overwrite'
-             })
-           },
-           body: reader.result
-         });
+      let accessToken; // Store the access token globally
+      accessToken = process.env.DBXACCESSTOKEN;
 
-         // Get temporary link using /get_temporary_link
-         const getTemporaryLinkResponse = await fetch('https://api.dropboxapi.com/2/files/get_temporary_link', {
-           method: 'POST',
-           headers: {
-             'Authorization': `Bearer ${accessToken}`,
-             'Content-Type': 'application/json'
-           },
-           body: JSON.stringify({
-             path: '/image.jpg'
-           })
-         });
+      reader.onloadend = async () => {
+        try {
 
-         const temporaryLink = await getTemporaryLinkResponse.json().link; // Get temporary link
+          // Upload image to Dropbox
+          const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/octet-stream',
+              'Dropbox-API-Arg': JSON.stringify({
+                path: '/image.jpg',
+                mode: 'overwrite'
+              })
+            },
+            body: reader.result
+          });
 
-         const text = document.getElementById('message').value;
+          // Get temporary link using /get_temporary_link
+          const getTemporaryLinkResponse = await fetch('https://api.dropboxapi.com/2/files/get_temporary_link', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              path: '/image.jpg'
+            })
+          });
 
-         // Send request to serverSide proxy (Python) | CORS(request) -> Gemini API -> Response
-         const pyProxyResponse = await fetch('https://notdiego7.pythonanywhere.com', {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json'
-           },
-           body: JSON.stringify({
-             prompt: text,
-             temporaryLink: temporaryLink
-           })
-         });
-         const generatedText = await pyProxyResponse.json().text;
+          const temporaryLink = await getTemporaryLinkResponse.json().link; // Get temporary link
 
-         document.querySelector('p#ai-body-text').innerText = generatedText;
-       } catch (error) {
-         console.error('Error:', error);
-       }
-     };
-   });
- });
+          const text = document.getElementById('message').value;
+
+          // Send request to serverSide proxy (Python) | CORS(request) -> Gemini API -> Response
+          const pyProxyResponse = await fetch('https://notdiego7.pythonanywhere.com', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              prompt: text,
+              temporaryLink: temporaryLink
+            })
+          });
+          const generatedText = await pyProxyResponse.json().text;
+
+          document.querySelector('p#ai-body-text').innerText = generatedText;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+    });
+  });
 });
+
 
 
 

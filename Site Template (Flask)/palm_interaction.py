@@ -1,11 +1,9 @@
 from flask import Flask, request, jsonify
 from google import generativeai
 from flask_cors import CORS
-from bs4 import BeautifulSoup
 from io import BytesIO
 from PIL import Image
-from dropbox import DropboxOAuth2FlowNoRedirect
-import requests, json
+import requests
 
 # -------------------------------- WebApp API -------------------------------- #
 app = Flask(__name__)
@@ -19,7 +17,7 @@ def generate_text_endpoint():
         temporary_link = request_data['temporaryLink']
         prompt = request_data['prompt']
 
-        image = parse_preview_page_link(temporary_link)
+        image = parse_and_open_image(temporary_link)
 
         generated_text = generate_ai_text(prompt, image)
 
@@ -28,38 +26,6 @@ def generate_text_endpoint():
 
     except Exception as e:
         raise Exception(f"{e}")
-
-@app.route('/dbxtkn', methods=['GET'])
-def drop_box_oauth2_token_endpoint():
-    APP_KEY = "bx9yg1jyu7zkj18"
-    APP_SECRET = "qmqy549b9wab3dk"
-
-    try:
-        # TODO: Here, we need OAuth2
-        auth_endpoint = "https://api.dropboxapi.com/2/auth/token/from_oauth1"
-
-        headers = {
-            "Authorization": "Basic <APP_KEY>:<APP_SECRET>",
-            "Content-Type": "application/json"
-        }
-
-        data = {
-            "oauth1_token": "bx9yg1jyu7zkj18",
-            "oauth1_token_secret": "qmqy549b9wab3dk"
-        }
-        with requests
-        r = requests.post(auth_endpoint, headers=headers, data=json.dumps(data))
-
-
-        # Store the access token securely (database or encrypted file)
-        # TODO: (Implement storage method)
-
-        headers = {'Content-Type': 'application/json'}
-        return jsonify({'access_token': access_token}), 200, headers
-
-    except Exception as e:
-        raise Exception(f'Error: {e}')
-        
 
 
 
@@ -77,7 +43,7 @@ def generate_ai_text(prompt, image_url):
     return response.text
 
 
-def parse_preview_page_link(temporary_link) -> str:
+def parse_and_open_image(temporary_link):
     image_bytes = requests.get(url= temporary_link).content
     image_data = BytesIO(image_bytes)
     image = Image.open(image_data)
