@@ -39,7 +39,8 @@ async function getGoogleGeminiResponse() {
     const imageBase64 = localStorage.getItem('imageBase64');
     const text = document.getElementById('message').value;
 
-    const pyProxyResponse = await fetch('https://notdiego7.pythonanywhere.com', {
+    // Send request to server-side proxy (Python) with streaming
+    const response = await fetch('https://notdiego7.pythonanywhere.com', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,9 +51,20 @@ async function getGoogleGeminiResponse() {
       }),
     });
 
-    const pyProxyResponseData = await pyProxyResponse.json();
-    generatedText = pyProxyResponseData.text;
-    document.querySelector('p#ai-body-text').innerText = generatedText; TODO: Slowly and progressively print the generatedText to screen
+    const reader = response.body.getReader();
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) {
+        break;
+      }
+
+      // Update the UI with the streamed text
+      const generatedText = document.querySelector('p#ai-body-text');
+      generatedText.innerText += value;
+    }
+
   } catch (error) {
     console.error(`Error: ${error}`);
   }

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from google import generativeai
 from flask_cors import CORS
 from io import BytesIO
@@ -15,7 +15,7 @@ CORS(app)
 def home():
     """
     Fulfills POST requests.
-    Responds with Google (AI) Gemini generated text (JSON).
+    Responds with Google (AI) Gemini generated text chunks (JSON).
     """
     try:
         request_data = request.get_json()
@@ -25,13 +25,27 @@ def home():
 
         image = parse_and_open_image(image_base64)
 
-        generated_text = generate_ai_text(prompt, image)
+        # Set up streaming response
+        def generate():
+            try:
+                generativeai.configure(api_key=API_KEY)
+                model = generativeai.GenerativeModel('gemini-pro-vision')
 
-        headers = {'Content-Type': 'application/json'}
-        return jsonify({'text': generated_text}), 200, headers
+                # Stream the response (in chunks)
+                for chunk in model.generate_content([prompt, image], stream=True):
+                    yield chunk.text
+
+            except Exception as e:
+                raise Exception(f"{e}")
+
+        headers = {'Content-Type': 'text/plain'}
+        return Response(generate(), headers=headers, status=200)
+
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in request data: {str(e)}'}), 400
 
     except Exception as e:
-        raise Exception(f"{e}")
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 
 
@@ -43,7 +57,7 @@ if __name__ == '__main__':
 def generate_ai_text(prompt, image_url):
     generativeai.configure(api_key= API_KEY)
     model = generativeai.GenerativeModel('gemini-pro-vision')
-    response = model.generate_content([prompt, image_url])
+    response = model.generate_content([prompt, image_url], stream= True)
 
     return response.text
 
